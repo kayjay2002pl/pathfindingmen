@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+<body>
+
+<p id="demo"></p>
+<p id="demo2"></p>
+
+<script>
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        showResult(xhttp.responseXML);
+    }
+};
+xhttp.open("GET", "aaaAAA.xml", true);
+xhttp.send(); 
+
+function showResult(xml) {
+    var txt = [];
+    var txt2 = "";
+    var con = 0;
+    path1 = "//teryt/catalog/row[NAZWA_DOD/text()='miasto' and ]/NAZWA"
+    path2 = "//teryt/catalog/row[NAZWA_DOD/text()='województwo']/NAZWA"
+    if (xml.evaluate) {
+        var nodes = xml.evaluate(path2, xml, null, XPathResult.ANY_TYPE, null);
+        var result = nodes.iterateNext();
+        while (result) {
+            txt[con]= result.childNodes[0].nodeValue;
+            result = nodes.iterateNext();
+            con++;
+        } 
+    // Code For Internet Explorer
+    }/* else if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
+        xml.setProperty("SelectionLanguage", "XPath");
+        nodes = xml.selectNodes(path);
+        for (i = 0; i < nodes.length; i++) {
+            txt += nodes[i].childNodes[0].nodeValue + "<br>";
+        }
+    }*/
+    console.log(txt)
+    //document.getElementById("demo").innerHTML = txt;
+    con = 2;
+    txt.forEach(element => {
+        if(con < 10){
+            var idd = "0" + con
+        }else{
+            var idd = con
+        }
+        var butt = document.createElement("button")
+        butt.id = idd
+        butt.onclick = ()=>{
+            document.getElementById("demo2").innerHTML = "";
+            console.log(butt.id)
+            console.log("huuuuy")
+            pathble = "//teryt/catalog/row[NAZWA_DOD/text()='miasto' and WOJ/text()='" + butt.id + "']/NAZWA"
+            if (xml.evaluate) {
+        var nodes = xml.evaluate(pathble, xml, null, XPathResult.ANY_TYPE, null);
+        var result = nodes.iterateNext();
+        while (result) {
+            txt2 += result.childNodes[0].nodeValue + "<br>";
+            result = nodes.iterateNext();
+        } 
+        document.getElementById("demo2").innerHTML = txt2;
+    // Code For Internet Explorer
+    }
+        }
+        butt.innerText = element
+        document.getElementById("demo").append(butt)
+        con += 2;
+        console.log(con)
+        
+    });
+}
+
+</script>
+
+</body>
+</html>
